@@ -1,4 +1,4 @@
-package ru.yandex.practicum.telemetry.collector.mapper;
+package ru.yandex.practicum.telemetry.collector.mapper.rest;
 
 import ru.yandex.practicum.kafka.telemetry.event.*;
 import ru.yandex.practicum.telemetry.collector.model.hub.*;
@@ -31,11 +31,9 @@ public class HubEventMapper {
             List<ScenarioConditionAvro> conditions = scenario.getConditions().stream()
                     .map(HubEventMapper::mapCondition)
                     .collect(Collectors.toList());
-
             List<DeviceActionAvro> actions = scenario.getActions().stream()
                     .map(HubEventMapper::mapAction)
                     .collect(Collectors.toList());
-
             ScenarioAddedEventAvro payload = ScenarioAddedEventAvro.newBuilder()
                     .setName(scenario.getName())
                     .setConditions(conditions)
