@@ -1,4 +1,4 @@
-package ru.yandex.practicum.telemetry.collector.mapper;
+package ru.yandex.practicum.telemetry.collector.mapper.rest;
 
 import ru.yandex.practicum.kafka.telemetry.event.*;
 import ru.yandex.practicum.telemetry.collector.model.sensor.*;

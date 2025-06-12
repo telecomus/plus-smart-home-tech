@@ -1,10 +1,10 @@
-package ru.yandex.practicum.telemetry.collector.handler.sensor.impl;
+package ru.yandex.practicum.telemetry.collector.handler.sensor.rest.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.telemetry.collector.handler.sensor.SensorEventHandler;
+import ru.yandex.practicum.telemetry.collector.handler.sensor.rest.SensorEventHandler;
 import ru.yandex.practicum.telemetry.collector.kafka.KafkaEventProducer;
-import ru.yandex.practicum.telemetry.collector.mapper.SensorEventMapper;
+import ru.yandex.practicum.telemetry.collector.mapper.rest.SensorEventMapper;
 import ru.yandex.practicum.telemetry.collector.model.sensor.MotionSensorEvent;
 import ru.yandex.practicum.telemetry.collector.model.sensor.SensorEventType;
 
