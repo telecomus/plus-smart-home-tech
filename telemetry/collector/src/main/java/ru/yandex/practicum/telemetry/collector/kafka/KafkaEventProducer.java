@@ -7,6 +7,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.springframework.stereotype.Component;
+import ru.practicum.telemetry.serialization.AvroSerializer;
 
 import java.util.Properties;
 import java.util.concurrent.Future;
