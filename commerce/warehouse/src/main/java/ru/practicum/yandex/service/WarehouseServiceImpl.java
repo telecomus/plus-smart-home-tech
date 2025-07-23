@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.yandex.model.Size;
+import ru.practicum.yandex.mapper.WarehouseMapper;
 import ru.practicum.yandex.model.WarehouseProduct;
 import ru.practicum.yandex.repository.WarehouseRepository;
 import ru.yandex.practicum.dto.*;
@@ -21,28 +21,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class WarehouseServiceImpl implements WarehouseService {
 	private final WarehouseRepository warehouseRepository;
+	private final WarehouseMapper warehouseMapper;
 
 	@Transactional
 	@Override
 	public void createProductInWarehouse(NewProductInWarehouse request) {
 		Optional<WarehouseProduct> product = findProduct(request.getProductId());
-		if (product.isPresent()) {
+		if (product.isPresent())
 			throw new ConditionsNotMetException("Невозможно добавить товар, который уже есть в базе данных");
-		}
-
-		WarehouseProduct newProduct = WarehouseProduct.builder()
-				.productId(request.getProductId()) // ← обязательно!
-				.quantity(1)
-				.fragile(request.isFragile())
-				.weight(request.getWeight())
-				.dimension(new Size(
-						request.getDimension().getWidth(),
-						request.getDimension().getHeight(),
-						request.getDimension().getDepth()
-				))
-				.build();
-
-		warehouseRepository.save(newProduct);
+		warehouseRepository.save(warehouseMapper.toWarehouse(request));
 	}
 
 	@Override
@@ -67,7 +54,6 @@ public class WarehouseServiceImpl implements WarehouseService {
 
 		boolean fragile = warehouseProducts.stream()
 				.anyMatch(WarehouseProduct::isFragile);
-
 		return ReserveProductsDto.builder()
 				.deliveryWeight(deliveryWeight)
 				.deliveryVolume(deliveryVolume)
@@ -79,9 +65,8 @@ public class WarehouseServiceImpl implements WarehouseService {
 	@Override
 	public void addProductInWarehouse(AddProductInWarehouse request) {
 		Optional<WarehouseProduct> product = findProduct(request.getProductId());
-		if (product.isEmpty()) {
+		if (product.isEmpty())
 			throw new NotFoundException("Отсутствует данный товар");
-		}
 		WarehouseProduct pr = product.get();
 		pr.setQuantity(pr.getQuantity() + request.getQuantity());
 		warehouseRepository.save(pr);
@@ -99,6 +84,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 	}
 
 	private Optional<WarehouseProduct> findProduct(String productId) {
+
 		return warehouseRepository.findById(productId);
 	}
 }
