@@ -22,7 +22,3 @@ spring:
       discovery:
         enabled: true
         service-id: config-server
-
-grpc:
-  server:
-    port: 9091
