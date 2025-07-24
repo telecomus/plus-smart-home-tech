@@ -1,27 +1,28 @@
 package ru.yandex.practicum.telemetry.analyzer.model;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-@Entity
-@Table(name = Sensor.TABLE_NAME)
-@NoArgsConstructor
+@Data
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@EqualsAndHashCode(of = "id")
-@Getter
-@Setter
-@ToString
+@Entity
+@Table(name = "sensors")
 public class Sensor {
-    public static final String TABLE_NAME = "sensors";
-    public static final String ID = "id";
-    public static final String HUB_ID = "hub_id";
-
     @Id
-    @Column(name = ID)
+    @Column(name = "id")
     String id;
 
-    @Column(name = HUB_ID)
+    @Column(name = "hub_id", nullable = false)
     String hubId;
 }

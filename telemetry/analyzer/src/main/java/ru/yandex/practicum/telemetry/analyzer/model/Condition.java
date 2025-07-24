@@ -1,37 +1,43 @@
 package ru.yandex.practicum.telemetry.analyzer.model;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import ru.yandex.practicum.kafka.telemetry.event.ConditionOperationAvro;
+import ru.yandex.practicum.kafka.telemetry.event.ConditionTypeAvro;
 
-@Entity
-@Table(name = Condition.TABLE_NAME)
-@NoArgsConstructor
+@Data
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@EqualsAndHashCode(of = "id")
-@Getter
-@Setter
-@ToString
+@Entity
+@Table(name = "conditions")
 public class Condition {
-    public static final String TABLE_NAME = "conditions";
-    public static final String ID = "id";
-    public static final String TYPE = "type";
-    public static final String OPERATION = "operation";
-    public static final String VALUE = "value";
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = ID)
+    @Column(name = "id")
     Long id;
 
-    @Column(name = TYPE)
-    String type;
+    @Column(name = "type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    ConditionTypeAvro type;
 
-    @Column(name = OPERATION)
-    String operation;
+    @Column(name = "operation", nullable = false)
+    @Enumerated(EnumType.STRING)
+    ConditionOperationAvro operation;
 
-    @Column(name = VALUE)
+    @Column(name = "value", nullable = false)
     Integer value;
 }
-

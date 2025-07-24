@@ -1,35 +1,34 @@
 package ru.yandex.practicum.telemetry.analyzer.model;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-@Entity
-@Table(
-        name = Scenario.TABLE_NAME,
-        uniqueConstraints = {@UniqueConstraint(columnNames = {Scenario.HUB_ID, Scenario.NAME})}
-)
-@NoArgsConstructor
+@Data
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@EqualsAndHashCode(of = "id")
-@Getter
-@Setter
-@ToString
+@Entity
+@Table(name = "scenarios")
 public class Scenario {
-    public static final String TABLE_NAME = "scenarios";
-    public static final String ID = "id";
-    public static final String HUB_ID = "hub_id";
-    public static final String NAME = "name";
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = ID)
+    @Column(name = "id")
     Long id;
 
-    @Column(name = HUB_ID)
+    @Column(name = "hub_id", nullable = false)
     String hubId;
 
-    @Column(name = NAME)
+    @Column(name = "name", nullable = false)
     String name;
 }
