@@ -47,11 +47,11 @@ public class CartController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/remove")
-	public CartDto changeCart(@RequestParam String username,
-							  @RequestBody List<String> productIds) {
+	public CartDto removeFromCart(@RequestParam String username,
+								  @RequestBody List<String> productIds) {
 		log.info("Запрос на удаление товаров {} из корзины пользователя {}", productIds, username);
 
-		// Преобразуем список ID продуктов в Map, где значение каждого элемента равно 0
+		// Преобразуем список ID продуктов в Map с нулевыми значениями
 		Map<String, Long> itemsToRemove = new HashMap<>();
 		for (String productId : productIds) {
 			itemsToRemove.put(productId, 0L);

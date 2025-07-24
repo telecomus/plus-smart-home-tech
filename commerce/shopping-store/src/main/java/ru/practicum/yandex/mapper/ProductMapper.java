@@ -1,31 +1,24 @@
 package ru.practicum.yandex.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingConstants;
+import org.mapstruct.*;
 import ru.practicum.yandex.model.Product;
 import ru.yandex.practicum.dto.ProductDto;
 
 import java.util.List;
+import java.util.UUID;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ProductMapper {
-    default Product productDtoToProduct(ProductDto productDto) {
-        if (productDto == null) {
-            return null;
+
+    @Mapping(target = "rating", constant = "0")
+    @Mapping(target = "productId", expression = "java(mapProductId(productDto))")
+    Product productDtoToProduct(ProductDto productDto);
+
+    default String mapProductId(ProductDto productDto) {
+        if (productDto.getProductId() == null || productDto.getProductId().isEmpty()) {
+            return UUID.randomUUID().toString();
         }
-
-        Product product = new Product();
-        product.setProductId(productDto.getProductId());
-        product.setProductName(productDto.getProductName());
-        product.setDescription(productDto.getDescription());
-        product.setImageSrc(productDto.getImageSrc());
-        product.setQuantityState(productDto.getQuantityState());
-        product.setProductState(productDto.getProductState());
-        product.setRating(0); // Устанавливаем какое-то значение по умолчанию для рейтинга
-        product.setProductCategory(productDto.getProductCategory());
-        product.setPrice(productDto.getPrice());
-
-        return product;
+        return productDto.getProductId();
     }
 
     ProductDto productToProductDto(Product product);
