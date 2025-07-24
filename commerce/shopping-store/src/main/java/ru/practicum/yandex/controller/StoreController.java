@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.yandex.dto.PagedResponse;
 import ru.practicum.yandex.service.StoreService;
 import ru.yandex.practicum.dto.Pageable;
 import ru.yandex.practicum.dto.ProductDto;
@@ -23,9 +24,10 @@ public class StoreController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping
-	public List<ProductDto> getProductsByCategory(@RequestParam ProductCategory category, Pageable pageable) {
+	public PagedResponse<ProductDto> getProductsByCategory(@RequestParam ProductCategory category, Pageable pageable) {
 		log.info("Запрос на получения списка товаров по категории {} и страницам {}", category, pageable);
-		return storeService.getProductsByCategory(category, pageable);
+		List<ProductDto> products = storeService.getProductsByCategory(category, pageable);
+		return PagedResponse.of(products);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
