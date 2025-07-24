@@ -1,5 +1,0 @@
-kafka:
-  server: "localhost:9092"
-  topics:
-    telemetry-sensors-v1: "telemetry.sensors.v1"
-    telemetry-snapshots-v1: "telemetry.snapshots.v1"
