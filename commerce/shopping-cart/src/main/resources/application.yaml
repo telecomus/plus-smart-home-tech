@@ -1,13 +1,6 @@
 server:
   port: 0
 
-eureka:
-  instance:
-    hostname: localhost
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
-
 spring:
   application:
     name: shopping-cart
@@ -17,8 +10,16 @@ spring:
     config:
       fail-fast: true
       retry:
-        use-random-policy: true
+        max-attempts: 6
         max-interval: 6000
+        use-random-policy: true
       discovery:
         enabled: true
         service-id: config-server
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    preferIpAddress: true
