@@ -51,7 +51,7 @@ public class StoreController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/quantityState")
-	public boolean changeState(SetProductCountState request) {
+	public boolean changeState(@RequestBody SetProductCountState request) {
 		log.info("Запрос на установку статуса для товара {}", request);
 		return storeService.changeState(request);
 	}

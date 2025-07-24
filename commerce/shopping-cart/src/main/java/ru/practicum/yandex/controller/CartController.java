@@ -9,6 +9,9 @@ import ru.practicum.yandex.service.CartService;
 import ru.yandex.practicum.dto.CartDto;
 import ru.yandex.practicum.dto.ChangeProductCount;
 import ru.yandex.practicum.dto.ReserveProductsDto;
+
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -45,9 +48,16 @@ public class CartController {
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping("/remove")
 	public CartDto changeCart(@RequestParam String username,
-									  @RequestBody Map<String, Long> items) {
-		log.info("Запрос на изменение состава товаров {} в корзине пользователя {}",  items, username);
-		return cartService.changeCart(username, items);
+							  @RequestBody List<String> productIds) {
+		log.info("Запрос на удаление товаров {} из корзины пользователя {}", productIds, username);
+
+		// Преобразуем список ID продуктов в Map, где значение каждого элемента равно 0
+		Map<String, Long> itemsToRemove = new HashMap<>();
+		for (String productId : productIds) {
+			itemsToRemove.put(productId, 0L);
+		}
+
+		return cartService.changeCart(username, itemsToRemove);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
