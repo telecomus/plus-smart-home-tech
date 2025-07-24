@@ -9,7 +9,12 @@ import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ProductMapper {
-    Product productDtoToProduct(ProductDto productDto);
+
+    default Product productDtoToProduct(ProductDto productDto) {
+        return null;
+    }
+
     ProductDto productToProductDto(Product product);
-    List<ProductDto> mapListProducts(List<Product> products);
+
+	List<ProductDto> mapListProducts(List<Product> products);
 }
