@@ -1,6 +1,10 @@
 server:
   port: 0
 
+grpc:
+  server:
+    port: 0  # 🔧 разрешает gRPC использовать любой свободный порт
+
 spring:
   application:
     name: shopping-cart
