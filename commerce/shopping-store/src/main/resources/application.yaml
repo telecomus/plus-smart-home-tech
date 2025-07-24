@@ -1,6 +1,10 @@
 server:
   port: 0
 
+grpc:
+  server:
+    port: 9094  # УНИКАЛЬНЫЙ grpc порт
+
 eureka:
   instance:
     hostname: localhost
