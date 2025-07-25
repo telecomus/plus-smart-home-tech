@@ -8,7 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,6 +20,8 @@ import lombok.experimental.FieldDefaults;
 import ru.yandex.practicum.interaction_api.dto.product.ProductCategory;
 import ru.yandex.practicum.interaction_api.dto.product.ProductState;
 import ru.yandex.practicum.interaction_api.dto.product.QuantityState;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -59,6 +61,6 @@ public class Product {
     ProductCategory productCategory;
 
     @Column(name = "price", nullable = false)
-    @Min(1)
-    Double price;
+    @DecimalMin(value = "0.01")
+    BigDecimal price;
 }
