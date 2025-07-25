@@ -4,6 +4,8 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.interaction_api.dto.product.ProductDto;
 import ru.yandex.practicum.shopping_store.model.Product;
 
+import java.math.BigDecimal;
+
 @Component
 public class ProductMapper {
     public Product fromProductDto(ProductDto productDto) {
@@ -14,7 +16,7 @@ public class ProductMapper {
                 .quantityState(productDto.getQuantityState())
                 .productState(productDto.getProductState())
                 .productCategory(productDto.getProductCategory())
-                .price(productDto.getPrice())
+                .price(BigDecimal.valueOf(productDto.getPrice()))
                 .build();
     }
 
@@ -27,7 +29,7 @@ public class ProductMapper {
                 .quantityState(product.getQuantityState())
                 .productState(product.getProductState())
                 .productCategory(product.getProductCategory())
-                .price(product.getPrice())
+                .price(product.getPrice().doubleValue())
                 .build();
     }
 }
