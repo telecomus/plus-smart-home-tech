@@ -1,0 +1,45 @@
+spring:
+  main:
+    banner-mode: OFF
+    allow-bean-definition-overriding: true
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+    hibernate:
+      ddl-auto: update
+      jdbc.time_zone: UTC
+  sql:
+    init:
+      mode: always
+
+  datasource:
+    driverClassName: "org.postgresql.Driver"
+    url: "jdbc:postgresql://localhost:5432/payment"
+    username: "service"
+    password: "service"
+
+logging:
+  level:
+    org.springframework:
+      orm.jpa: WARN
+      orm.jpa.JpaTransactionManager: WARN
+      transaction: WARN
+      transaction.interceptor: WARN
+    org.hibernate:
+      SQL: WARN
+      type.descriptor.sql.BasicBinder: WARN
+      orm.jdbc:
+        bind: WARN
+        core.JdbcTemplate: WARN
+        core.StatementCreatorUtils: WARN
+    ru:
+      yandex:
+        practicum: DEBUG
+
+api:
+  path: "/api/v1"
+
+server:
+  port: 0
