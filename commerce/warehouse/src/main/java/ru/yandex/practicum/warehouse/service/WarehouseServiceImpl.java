@@ -6,13 +6,16 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.interaction_api.dto.shopping_cart.ShoppingCartDto;
 import ru.yandex.practicum.interaction_api.dto.warehouse.AddProductToWarehouseRequest;
 import ru.yandex.practicum.interaction_api.dto.warehouse.AddressDto;
+import ru.yandex.practicum.interaction_api.dto.warehouse.AssemblyProductsForOrderRequest;
 import ru.yandex.practicum.interaction_api.dto.warehouse.BookedProductsDto;
 import ru.yandex.practicum.interaction_api.dto.warehouse.NewProductInWarehouseRequest;
+import ru.yandex.practicum.interaction_api.dto.warehouse.ShippedToDeliveryRequest;
 import ru.yandex.practicum.interaction_api.exception.NoSpecifiedProductInWarehouseException;
 import ru.yandex.practicum.interaction_api.exception.ProductInShoppingCartLowQuantityInWarehouse;
 import ru.yandex.practicum.interaction_api.exception.SpecifiedProductAlreadyInWarehouseException;
+import ru.yandex.practicum.interaction_api.interaction.DeliveryClient;
 import ru.yandex.practicum.warehouse.mapper.WarehouseMapper;
-import ru.yandex.practicum.warehouse.model.Warehouse;
+import ru.yandex.practicum.warehouse.model.ProductInWarehouse;
 import ru.yandex.practicum.warehouse.storage.WarehouseRepository;
 
 import java.security.SecureRandom;
@@ -31,6 +34,8 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseRepository repository;
     private final WarehouseMapper warehouseMapper;
 
+    private final DeliveryClient deliveryClient;
+
     @Override
     public void createProduct(NewProductInWarehouseRequest request) {
         if (repository.existsByProductId(request.getProductId())) {
@@ -45,38 +50,76 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     public BookedProductsDto checkQuantity(ShoppingCartDto shoppingCartDto) {
-        Set<String> productIds = shoppingCartDto.getProducts().keySet();
-        List<Warehouse> products = repository.findAllById(productIds);
-        Map<String, Long> productsOnWarehouse = products.stream()
-                .collect(Collectors.toMap(Warehouse::getProductId, Warehouse::getQuantity));
+        checkProductsQuantity(shoppingCartDto.getProducts());
+        return new BookedProductsDto();
+    }
 
-        for (String productId : shoppingCartDto.getProducts().keySet()) {
+    @Override
+    public void addProduct(AddProductToWarehouseRequest request) {
+        ProductInWarehouse productInWarehouse = getProductWithCheck(request.getProductId());
+        productInWarehouse.setQuantity(productInWarehouse.getQuantity() + request.getQuantity());
+        repository.save(productInWarehouse);
+    }
+
+    @Override
+    public AddressDto getAddress() {
+        return new AddressDto(CURRENT_ADDRESS, CURRENT_ADDRESS, CURRENT_ADDRESS, CURRENT_ADDRESS, CURRENT_ADDRESS);
+    }
+
+    @Override
+    public void shipped(ShippedToDeliveryRequest request) {
+        deliveryClient.pickedDelivery(request.getDeliveryId());
+    }
+
+    @Override
+    public void returnProducts(Map<String, Long> products) {
+        for (Map.Entry<String, Long> entry : products.entrySet()) {
+            addProduct(new AddProductToWarehouseRequest(entry.getKey(), entry.getValue()));
+        }
+    }
+
+    @Override
+    public BookedProductsDto assembly(AssemblyProductsForOrderRequest request) {
+        checkProductsQuantity(request.getProducts());
+        BookedProductsDto result = new BookedProductsDto(0d, 0d, false);
+
+        for (Map.Entry<String, Long> entry : request.getProducts().entrySet()) {
+            ProductInWarehouse product = getProductWithCheck(entry.getKey());
+            product.setQuantity(product.getQuantity() - entry.getValue());
+            repository.save(product);
+            Double volume = product.getWidth() * product.getHeight() * product.getDepth();
+
+            result.setDeliveryVolume(result.getDeliveryVolume() + volume);
+            result.setDeliveryWeight(result.getDeliveryWeight() + product.getWeight());
+            result.setFragile(result.getFragile() || product.getFragile());
+        }
+
+        return result;
+    }
+
+    private void checkProductsQuantity(Map<String, Long> products) {
+        Set<String> productIds = products.keySet();
+        List<ProductInWarehouse> productsInWarehouse = repository.findAllById(productIds);
+        Map<String, Long> productsOnWarehouse = productsInWarehouse.stream()
+                .collect(Collectors.toMap(ProductInWarehouse::getProductId, ProductInWarehouse::getQuantity));
+
+        for (String productId : products.keySet()) {
             Long quantity = productsOnWarehouse.getOrDefault(productId, 0L);
 
-            if (quantity < shoppingCartDto.getProducts().get(productId)) {
+            if (quantity < products.get(productId)) {
                 throw new ProductInShoppingCartLowQuantityInWarehouse(
                         String.format("Product %s not enough.", productId),
                         HttpStatus.BAD_REQUEST.toString()
                 );
             }
         }
-
-        return new BookedProductsDto();
     }
 
-    @Override
-    public void addProduct(AddProductToWarehouseRequest request) {
-        Warehouse warehouse = repository.findById(request.getProductId())
+    private ProductInWarehouse getProductWithCheck(String id) {
+        return repository.findById(id)
                 .orElseThrow(() -> new NoSpecifiedProductInWarehouseException(
-                        String.format("There ere no product %s in warehouse.", request.getProductId()),
+                        String.format("There ere no product %s in warehouse.", id),
                         HttpStatus.BAD_REQUEST.toString()
                 ));
-        warehouse.setQuantity(warehouse.getQuantity() + request.getQuantity());
-        repository.save(warehouse);
-    }
-
-    @Override
-    public AddressDto getShoppingCart() {
-        return new AddressDto(CURRENT_ADDRESS, CURRENT_ADDRESS, CURRENT_ADDRESS, CURRENT_ADDRESS, CURRENT_ADDRESS);
     }
 }
