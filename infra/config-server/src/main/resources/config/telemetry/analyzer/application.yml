@@ -1,0 +1,52 @@
+grpc:
+  client:
+    hub-router:
+      address: 'static://localhost:59090'
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      negotiationType: plaintext
+
+kafka:
+  server: "localhost:9092"
+  topics:
+    telemetry-hubs-v1: "telemetry.hubs.v1"
+    telemetry-snapshots-v1: "telemetry.snapshots.v1"
+  consumer:
+    groups:
+      hub-events: "hubEventConsumer"
+      snapshot-events: "snapshotEventConsumer"
+
+spring:
+  main.banner-mode: OFF
+  jpa:
+    hibernate:
+      ddl-auto: update
+      format_sql: true
+      jdbc.time_zone: UTC
+  sql:
+    init:
+      mode: always
+
+  datasource:
+    driverClassName: "org.postgresql.Driver"
+    url: "jdbc:postgresql://localhost:5432/analyzer"
+    username: "service"
+    password: "service"
+
+logging:
+  level:
+    org.springframework:
+      orm.jpa: WARN
+      orm.jpa.JpaTransactionManager: WARN
+      transaction: WARN
+      transaction.interceptor: WARN
+    org.hibernate:
+      SQL: WARN
+    ru:
+      yandex:
+        practicum:
+          telemetry:
+            analyzer: DEBUG
+
+server:
+  port: 8081
