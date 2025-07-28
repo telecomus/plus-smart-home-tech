@@ -56,4 +56,10 @@ public class Controller implements ShoppingCartClient {
                                           @Valid @RequestBody ChangeProductQuantityRequest request) {
         return service.changeQuantity(username, request);
     }
+
+    @GetMapping("username")
+    @ResponseStatus(HttpStatus.OK)
+    public String getUserName(@RequestParam String shoppingCartId) {
+        return service.getUserName(shoppingCartId);
+    }
 }

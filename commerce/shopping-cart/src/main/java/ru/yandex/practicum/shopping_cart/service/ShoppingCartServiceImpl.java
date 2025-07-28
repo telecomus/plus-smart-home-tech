@@ -107,6 +107,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return shoppingCartMapper.toShoppingCartDto(repository.save(shoppingCart));
     }
 
+    @Override
+    public String getUserName(String shoppingCartId) {
+        ShoppingCart shoppingCart = repository.findById(shoppingCartId)
+                .orElseThrow(() -> new RuntimeException("NShopping cart not found.")
+        );
+
+        return shoppingCart.getOwner();
+    }
+
     private void checkUsername(String username) {
         if (username == null || username.isBlank()) {
             throw new NotAuthorizedUserException("Empty username.", HttpStatus.UNAUTHORIZED.toString());
