@@ -21,6 +21,7 @@ import ru.yandex.practicum.interaction_api.interaction.PaymentClient;
 import ru.yandex.practicum.interaction_api.interaction.ShoppingCartClient;
 import ru.yandex.practicum.interaction_api.interaction.WarehouseClient;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -130,7 +131,7 @@ public class OrderServiceImpl implements OrderService {
 
         if (order.getTotalPrice() == null) {
             Double totalPrice = paymentClient.calculateTotalCoast(orderMapper.toOrderDto(order));
-            order.setTotalPrice(totalPrice);
+            order.setTotalPrice(totalPrice != null ? BigDecimal.valueOf(totalPrice) : null);
             order = repository.save(order);
         }
 
