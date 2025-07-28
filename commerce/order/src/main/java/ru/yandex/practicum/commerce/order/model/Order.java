@@ -21,6 +21,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import ru.yandex.practicum.interaction_api.dto.order.OrderState;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,13 +66,13 @@ public class Order {
     Boolean fragile;
 
     @Column(name = "total_price")
-    Double totalPrice;
+    BigDecimal totalPrice;
 
     @Column(name = "delivery_price")
-    Double deliveryPrice;
+    BigDecimal deliveryPrice;
 
     @Column(name = "product_price")
-    Double productPrice;
+    BigDecimal productPrice;
 
     @ElementCollection
     @CollectionTable(name = "orders_products",
