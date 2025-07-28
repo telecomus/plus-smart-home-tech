@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 @Getter
@@ -39,9 +40,9 @@ public class OrderDto {
 
     Boolean fragile;
 
-    Double totalPrice;
+    BigDecimal totalPrice;
 
-    Double deliveryPrice;
+    BigDecimal deliveryPrice;
 
-    Double productPrice;
+    BigDecimal productPrice;
 }

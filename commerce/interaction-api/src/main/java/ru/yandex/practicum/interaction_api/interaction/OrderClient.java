@@ -1,6 +1,7 @@
 package ru.yandex.practicum.interaction_api.interaction;
 
 import feign.FeignException;
+import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,10 +18,10 @@ public interface OrderClient {
     List<OrderDto> getOrders(String username) throws FeignException;
 
     @PutMapping("/api/v1/order")
-    OrderDto createOrder(CreateNewOrderRequest request) throws FeignException;
+    OrderDto createOrder(@Valid CreateNewOrderRequest request) throws FeignException;
 
     @PostMapping("/api/v1/order/return")
-    OrderDto returnOrder(ProductReturnRequest productReturnRequest) throws FeignException;
+    OrderDto returnOrder(@Valid ProductReturnRequest productReturnRequest) throws FeignException;
 
     @PostMapping("/api/v1/order/payment")
     OrderDto paymentOrder(String orderId) throws FeignException;

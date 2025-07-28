@@ -1,6 +1,7 @@
 package ru.yandex.practicum.interaction_api.interaction;
 
 import feign.FeignException;
+import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,7 @@ public interface ShoppingCartClient {
     ShoppingCartDto removeFromShoppingCart(String username, List<String> products) throws FeignException;
 
     @PostMapping("/api/v1/shopping-cart/change-quantity")
-    ShoppingCartDto changeQuantity(String username, ChangeProductQuantityRequest request) throws FeignException;
+    ShoppingCartDto changeQuantity(String username, @Valid ChangeProductQuantityRequest request) throws FeignException;
 
     @GetMapping("/api/v1/shopping-cart/username")
     String getUserName(String shoppingCartId) throws FeignException;

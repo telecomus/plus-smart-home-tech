@@ -1,6 +1,7 @@
 package ru.yandex.practicum.interaction_api.interaction;
 
 import feign.FeignException;
+import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,22 +19,22 @@ import java.util.Map;
 @FeignClient(name = "warehouse")
 public interface WarehouseClient {
     @PutMapping("/api/v1/warehouse")
-    void createProduct(NewProductInWarehouseRequest request) throws FeignException;
+    void createProduct(@Valid NewProductInWarehouseRequest request) throws FeignException;
 
     @PostMapping("/api/v1/warehouse/check")
-    BookedProductsDto checkQuantity(ShoppingCartDto shoppingCartDto) throws FeignException;
+    BookedProductsDto checkQuantity(@Valid ShoppingCartDto shoppingCartDto) throws FeignException;
 
     @PostMapping("/api/v1/warehouse/shipped")
-    void shipped(ShippedToDeliveryRequest request) throws FeignException;
+    void shipped(@Valid ShippedToDeliveryRequest request) throws FeignException;
 
     @PostMapping("/api/v1/warehouse/return")
     void returnProducts(Map<String, Long> products) throws FeignException;
 
     @PostMapping("/api/v1/warehouse/assembly")
-    BookedProductsDto assembly(AssemblyProductsForOrderRequest request) throws FeignException;
+    BookedProductsDto assembly(@Valid AssemblyProductsForOrderRequest request) throws FeignException;
 
     @PostMapping("/api/v1/warehouse/add")
-    void addProduct(AddProductToWarehouseRequest request) throws FeignException;
+    void addProduct(@Valid AddProductToWarehouseRequest request) throws FeignException;
 
     @GetMapping("/api/v1/warehouse/address")
     AddressDto getAddress()  throws FeignException;
